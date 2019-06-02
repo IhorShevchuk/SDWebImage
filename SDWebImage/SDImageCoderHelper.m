@@ -522,7 +522,7 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
 }
 
 + (BOOL)shouldScaleDownImage:(nonnull UIImage *)image limitBytes:(NSUInteger)bytes {
-    BOOL shouldScaleDown = YES;
+    BOOL shouldScaleDown;
     
     CGImageRef sourceImageRef = image.CGImage;
     CGSize sourceResolution = CGSizeZero;
@@ -544,12 +544,10 @@ static const CGFloat kDestSeemOverlap = 2.0f;   // the numbers of pixels to over
     }
     float imageScale = destTotalPixels / sourceTotalPixels;
     if (imageScale < 1) {
-        shouldScaleDown = YES;
-    } else {
-        shouldScaleDown = NO;
+        return YES;
     }
     
-    return shouldScaleDown;
+    return NO;
 }
 #endif
 
