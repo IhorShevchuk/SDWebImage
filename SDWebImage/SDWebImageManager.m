@@ -403,7 +403,9 @@ static id<SDImageLoader> _defaultImageLoader;
     if (mutableContext.count == 0) {
         return context;
     } else {
-        [mutableContext addEntriesFromDictionary:context];
+        if(context != nil) {
+            [mutableContext addEntriesFromDictionary:context];
+        }
         return [mutableContext copy];
     }
 }

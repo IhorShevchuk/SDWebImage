@@ -30,25 +30,25 @@ inline CGFloat SDImageScaleFactorForKey(NSString * _Nullable key) {
     if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
 #endif
     {
+        if (key.length < 8)
+        {
+            return scale;
+        }
         // a@2x.png -> 8
-        if (key.length >= 8) {
-            // Fast check
-            BOOL isURL = [key hasPrefix:@"http://"] || [key hasPrefix:@"https://"];
-            for (NSNumber *scaleFactor in SDImageScaleFactors()) {
-                // @2x. for file name and normal url
-                NSString *fileScale = [NSString stringWithFormat:@"@%@x.", scaleFactor];
-                if ([key containsString:fileScale]) {
+        // Fast check
+        BOOL isURL = [key hasPrefix:@"http://"] || [key hasPrefix:@"https://"];
+        for (NSNumber *scaleFactor in SDImageScaleFactors()) {
+            // @2x. for file name and normal url
+            NSString *fileScale = [NSString stringWithFormat:@"@%@x.", scaleFactor];
+            if ([key containsString:fileScale]) {
+                scale = scaleFactor.doubleValue;
+                return scale;
+            }
+            // %402x. for url encode
+            NSString *urlScale = [NSString stringWithFormat:@"%%40%@x.", scaleFactor];
+            if (isURL && [key containsString:urlScale]) {
                     scale = scaleFactor.doubleValue;
                     return scale;
-                }
-                if (isURL) {
-                    // %402x. for url encode
-                    NSString *urlScale = [NSString stringWithFormat:@"%%40%@x.", scaleFactor];
-                    if ([key containsString:urlScale]) {
-                        scale = scaleFactor.doubleValue;
-                        return scale;
-                    }
-                }
             }
         }
     }
